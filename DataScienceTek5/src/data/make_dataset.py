@@ -13,21 +13,23 @@ path = os.getcwd() + "/src"
 
 sys.path.append(path)
 from models.train_model import train
+import streamlit as st
 
-#@click.command()
-#@click.argument('input_filepath', type=click.Path(exists=True))
-#@click.argument('output_filepath', type=click.Path())
+
+# @click.command()
+# @click.argument('input_filepath', type=click.Path(exists=True))
+# @click.argument('output_filepath', type=click.Path())
 
 def load_data():
     olivetti = fetch_olivetti_faces()
     return olivetti
+
 
 def main(input_filepath, output_filepath):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
-
 
     dataset = load_data()
     sss = StratifiedShuffleSplit()
@@ -47,16 +49,25 @@ def main(input_filepath, output_filepath):
     X_valid = X_train_valid[valid_idx]
     y_valid = y_train_valid[valid_idx]
 
-    train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_valid)
-    #print(X_train.shape, y_train.shape)
-    #print(X_valid.shape, y_valid.shape)
-    #print(X_test.shape, y_test.shape)
+    st.image(X_train_valid[1].reshape(-1, 64))
 
-    #print(dataset)
+
+    train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_valid)
+    # print(X_train.shape, y_train.shape)
+    # print(X_valid.shape, y_valid.shape)
+    # print(X_test.shape, y_test.shape)
+
+    # print(dataset)
+
+    st.image(X_train_valid[1].reshape(-1, 64))
+
+
+
     logger.info('making final data set from raw data')
 
 
 if __name__ == '__main__':
+    st.title("Dashboard")
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
