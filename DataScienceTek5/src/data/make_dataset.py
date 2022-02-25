@@ -47,7 +47,7 @@ def main(input_filepath, output_filepath):
     X_valid = X_train_valid[valid_idx]
     y_valid = y_train_valid[valid_idx]
 
-    train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid)
+    train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_valid)
     #print(X_train.shape, y_train.shape)
     #print(X_valid.shape, y_valid.shape)
     #print(X_test.shape, y_test.shape)

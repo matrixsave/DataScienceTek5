@@ -9,8 +9,13 @@ from sklearn.metrics import silhouette_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 
+from numpy import mean
+from numpy import std
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedStratifiedKFold
 
-def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid):
+
+def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_valid):
     img = exposure.equalize_adapthist(X_train_valid[4], clip_limit=0.01)
 
     plt.figure(figsize=(7, 4))
@@ -128,5 +133,17 @@ def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid):
     clf.fit(X_train_extended, y_train)
     clf.score(X_valid_extended, y_valid)
 
-def dump_model(model):
-    pickle.dump(model, open('./models/rdf_nestimators_150_state_42.pkl', 'wb'))
+
+    X_train_valid_pca = PCA(X_train_valid)
+
+    model = RandomForestClassifier(n_estimators=150, random_state=42)
+    model.fit(X_train_pca, y_train)
+    model.score(X_valid_pca, y_valid)
+
+    # evaluate the model
+    cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=1)
+    n_scores = cross_val_score(model, X_train_valid, y_train_valid, scoring='accuracy', cv=cv, n_jobs=-1, error_score='raise')
+    # report performance
+    print('Accuracy: %.3f (%.3f)' % (mean(n_scores), std(n_scores)))
+
+    pickle.dump(model, open('../../models/rdf_nestimators_150_state_42.pkl', 'wb'))
