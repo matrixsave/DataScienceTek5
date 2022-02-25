@@ -13,6 +13,7 @@ from numpy import mean
 from numpy import std
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedStratifiedKFold
+import streamlit as st
 
 
 def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_valid):
@@ -20,6 +21,7 @@ def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_val
 
     plt.figure(figsize=(7, 4))
     plt.subplot(121)
+    st.image(X_train_valid[4].reshape(-1, 64))
     #plt.imshow(X_train_valid[4].reshape(-1, 64), cmap="gray")
     plt.title("Original", fontsize=16)
     plt.subplot(122)
@@ -119,6 +121,8 @@ def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_val
 
     X_train_reduced.shape
 
+    st.write("TEST")
+    
     for n_clusters in k_range:
         pipeline = Pipeline([
             ("kmeans", KMeans(n_clusters=n_clusters, random_state=42)),
@@ -132,6 +136,8 @@ def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_val
     clf = RandomForestClassifier(n_estimators=150, random_state=42)
     clf.fit(X_train_extended, y_train)
     clf.score(X_valid_extended, y_valid)
+    st.write(X_train_extended)
+    st.write(X_valid_extended)
 
 
     X_train_valid_pca = PCA(X_train_valid)
@@ -146,4 +152,6 @@ def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_val
     # report performance
     print('Accuracy: %.3f (%.3f)' % (mean(n_scores), std(n_scores)))
 
-    pickle.dump(model, open('../../models/rdf_nestimators_150_state_42.pkl', 'wb'))
+    pickle.dump(model, open('./models/rdf_nestimators_150_state_42.pkl', 'wb'))
+
+   
