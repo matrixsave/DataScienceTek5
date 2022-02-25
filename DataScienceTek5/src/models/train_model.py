@@ -21,7 +21,10 @@ def train(X_train_valid, X_train, X_valid, X_test, y_train, y_valid, y_train_val
 
     plt.figure(figsize=(7, 4))
     plt.subplot(121)
-    st.image(X_train_valid[4].reshape(-1, 64))
+    fig = plt.figure(figsize=(8,8))
+    for i in range (64):
+        st.image(X_train_valid[i].reshape(-1, 64))
+    #st.image(X_train_valid[4].reshape(-1, 64))
     #plt.imshow(X_train_valid[4].reshape(-1, 64), cmap="gray")
     plt.title("Original", fontsize=16)
     plt.subplot(122)
